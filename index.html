@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ru" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>&gt; tsviatkou.cv.sh</title>
+    <meta
+      name="description"
+      content="Богдан Цветков — Fullstack-разработчик. Интерактивное резюме."
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: { mono: ["JetBrains Mono", "monospace"] },
+            colors: {
+              "matrix-green": "#00ff41",
+              "terminal-bg": "#0a0f0d",
+              "terminal-gray": "#1a1f1a",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      * {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "JetBrains Mono", monospace;
+        background: #000;
+        color: #00ff41;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent 50%,
+          rgba(0, 255, 65, 0.02) 51%
+        );
+        background-size: 100% 4px;
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .glitch {
+        position: relative;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .glitch::before {
+        left: 2px;
+        text-shadow: -2px 0 #ff00c8;
+        clip: rect(24px, 550px, 90px, 0);
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px;
+        text-shadow: -2px 0 #00fff9;
+        clip: rect(85px, 550px, 140px, 0);
+        animation: glitch-anim 2.5s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim {
+        0% {
+          clip: rect(10px, 9999px, 20px, 0);
+          transform: skew(0.5deg);
+        }
+        5% {
+          clip: rect(50px, 9999px, 60px, 0);
+          transform: skew(-0.5deg);
+        }
+        10% {
+          clip: rect(100px, 9999px, 110px, 0);
+          transform: skew(0.3deg);
+        }
+        15% {
+          clip: rect(30px, 9999px, 40px, 0);
+          transform: skew(-0.3deg);
+        }
+        20% {
+          clip: rect(70px, 9999px, 80px, 0);
+          transform: skew(0.1deg);
+        }
+        100% {
+          clip: rect(10px, 9999px, 20px, 0);
+          transform: skew(0);
+        }
+      }
+      @keyframes glitch-anim-2 {
+        0% {
+          clip: rect(5px, 9999px, 15px, 0);
+          transform: skew(0.3deg);
+        }
+        5% {
+          clip: rect(45px, 9999px, 55px, 0);
+          transform: skew(-0.3deg);
+        }
+        10% {
+          clip: rect(95px, 9999px, 105px, 0);
+          transform: skew(0.1deg);
+        }
+        15% {
+          clip: rect(25px, 9999px, 35px, 0);
+          transform: skew(-0.1deg);
+        }
+        20% {
+          clip: rect(65px, 9999px, 75px, 0);
+          transform: skew(0.2deg);
+        }
+        100% {
+          clip: rect(5px, 9999px, 15px, 0);
+          transform: skew(0);
+        }
+      }
+      .terminal-window {
+        background: #0a0f0d;
+        border: 1px solid #00ff41;
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+      }
+      .terminal-header {
+        background: #1a1f1a;
+        border-bottom: 1px solid #00ff41;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .terminal-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ff41;
+      }
+      .terminal-dot:nth-child(2) {
+        background: #ff0;
+      }
+      .terminal-dot:nth-child(3) {
+        background: #f00;
+      }
+      .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        background: #00ff41;
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .skill-tag {
+        background: #00ff4110;
+        border: 1px solid #00ff4140;
+        transition: all 0.2s;
+      }
+      .skill-tag:hover {
+        background: #00ff4120;
+        box-shadow: 0 0 10px #00ff41;
+      }
+      .project-card {
+        background: linear-gradient(135deg, #0a0f0d 0%, #111 100%);
+        border-left: 3px solid #00ff41;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .project-card:hover {
+        transform: translateX(10px);
+        box-shadow: -5px 0 15px rgba(0, 255, 65, 0.3);
+      }
+      .section-accent {
+        border-left: 3px solid #00ff41;
+        padding-left: 12px;
+      }
+      .lang-btn {
+        background: #00ff4120;
+        border: 1px solid #00ff4140;
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        background: #00ff4140;
+      }
+    </style>
+  </head>
+  <body class="relative">
+    <div class="scanline"></div>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-12">
+      <!-- Lang Switch -->
+      <div class="flex justify-end gap-2">
+        <button class="lang-btn px-3 py-1 rounded active" data-lang="ru">
+          RU
+        </button>
+        <button class="lang-btn px-3 py-1 rounded" data-lang="en">EN</button>
+      </div>
+
+      <!-- Terminal Header -->
+      <header class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span class="text-xs opacity-60">bogdan@cv.sh</span>
+        </div>
+        <div class="p-6 font-mono text-sm leading-relaxed">
+          <p class="mb-2">
+            <span class="text-yellow-400">➜</span>
+            <span class="opacity-60 lang-whoami">whoami</span>
+          </p>
+          <p class="text-3xl glitch mb-4" data-text="Богдан Цветков">
+            Богдан Цветков
+          </p>
+          <p class="mb-2">
+            <span class="text-yellow-400">➜</span>
+            <span class="opacity-60 lang-role">role</span>
+          </p>
+          <p class="text-lg mb-2 lang-title">
+            Fullstack-разработчик <span class="opacity-60">// 5 лет опыта</span>
+          </p>
+
+          <p class="opacity-80 lang-bio"></p>
+        </div>
+      </header>
+
+      <!-- Skills -->
+      <section>
+        <h2 class="text-2xl font-bold mb-6 section-accent">
+          <span class="text-yellow-400">#</span>
+          <span class="lang-skills">НАВЫКИ</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <span class="opacity-60">frontend/</span>
+            </div>
+            <div class="p-4 flex flex-wrap gap-2">
+              <span class="skill-tag px-2 py-1 rounded">Angular</span>
+              <span class="skill-tag px-2 py-1 rounded">NgRx</span>
+              <span class="skill-tag px-2 py-1 rounded">RxJS</span>
+              <span class="skill-tag px-2 py-1 rounded">React</span>
+              <span class="skill-tag px-2 py-1 rounded">Redux</span>
+              <span class="skill-tag px-2 py-1 rounded">Zustand</span>
+              <span class="skill-tag px-2 py-1 rounded">TypeScript</span>
+              <span class="skill-tag px-2 py-1 rounded">HTML/CSS</span>
+              <span class="skill-tag px-2 py-1 rounded">SCSS</span>
+              <span class="skill-tag px-2 py-1 rounded">Tailwind</span>
+              <span class="skill-tag px-2 py-1 rounded">Bootstrap</span>
+              <span class="skill-tag px-2 py-1 rounded">Jest</span>
+              <span class="skill-tag px-2 py-1 rounded"
+                >React Testing Library</span
+              >
+              <span class="skill-tag px-2 py-1 rounded">Cypress</span>
+              <span class="skill-tag px-2 py-1 rounded">Webpack</span>
+              <span class="skill-tag px-2 py-1 rounded">Vite</span>
+              <span class="skill-tag px-2 py-1 rounded">a11y</span>
+            </div>
+          </div>
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <span class="opacity-60">backend/</span>
+            </div>
+            <div class="p-4 flex flex-wrap gap-2">
+              <span class="skill-tag px-2 py-1 rounded">Node.js</span>
+              <span class="skill-tag px-2 py-1 rounded">Express.js</span>
+              <span class="skill-tag px-2 py-1 rounded">NestJS</span>
+              <span class="skill-tag px-2 py-1 rounded">REST API</span>
+              <span class="skill-tag px-2 py-1 rounded">WebSockets</span>
+              <span class="skill-tag px-2 py-1 rounded">TypeORM</span>
+              <span class="skill-tag px-2 py-1 rounded">Prisma</span>
+              <span class="skill-tag px-2 py-1 rounded">MongoDB</span>
+              <span class="skill-tag px-2 py-1 rounded">DynamoDB</span>
+              <span class="skill-tag px-2 py-1 rounded">PostgreSQL</span>
+              <span class="skill-tag px-2 py-1 rounded">AWS</span>
+              <span class="skill-tag px-2 py-1 rounded">Lambda</span>
+              <span class="skill-tag px-2 py-1 rounded">API Gateway</span>
+              <span class="skill-tag px-2 py-1 rounded">S3</span>
+              <span class="skill-tag px-2 py-1 rounded">SQS/SNS</span>
+              <span class="skill-tag px-2 py-1 rounded">Step Functions</span>
+              <span class="skill-tag px-2 py-1 rounded">Serverless</span>
+              <span class="skill-tag px-2 py-1 rounded">Docker</span>
+            </div>
+          </div>
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <span class="opacity-60">tools/</span>
+            </div>
+            <div class="p-4 flex flex-wrap gap-2">
+              <span class="skill-tag px-2 py-1 rounded">Git</span>
+              <span class="skill-tag px-2 py-1 rounded">Jest</span>
+              <span class="skill-tag px-2 py-1 rounded">Docker</span>
+              <span class="skill-tag px-2 py-1 rounded">Jira</span>
+              <span class="skill-tag px-2 py-1 rounded">Agile</span>
+              <span class="skill-tag px-2 py-1 rounded">CI/CD</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section>
+        <h2 class="text-2xl font-bold mb-6 section-accent">
+          <span class="text-yellow-400">#</span>
+          <span class="lang-exp">ОПЫТ РАБОТЫ</span>
+        </h2>
+        <div class="space-y-6">
+          <div class="project-card p-6">
+            <p class="text-yellow-400 mb-2">
+              EPAM Systems <span class="opacity-60">(2019–2025)</span>
+            </p>
+            <p class="opacity-60 text-sm lang-nda">
+              <span class="text-yellow-400">⚠</span> Информация о заказчиках
+              недоступна по NDA.
+            </p>
+
+            <h3 class="text-lg font-bold mb-2">
+              > HRM-система медицинской компании
+            </h3>
+            <p class="opacity-80 mb-3 lang-proj1">
+              WebSocket Gateway на Node.js для обмена событиями реального
+              времени, модуль управления множественными позициями сотрудников.
+            </p>
+            <div class="flex gap-2 text-xs">
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">Angular</span>
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">NgRx</span>
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">Node.js</span>
+            </div>
+          </div>
+          <div class="project-card p-6">
+            <h3 class="text-lg font-bold mb-2">
+              > Платформа регулярного биллинга
+            </h3>
+            <p class="opacity-80 mb-3 lang-proj2">
+              Сервис выставления периодических счетов на AWS: Lambda, API
+              Gateway, DynamoDB, PDF-генерация.
+            </p>
+            <div class="flex gap-2 text-xs">
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">Angular</span>
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">AWS</span>
+            </div>
+          </div>
+          <div class="project-card p-6">
+            <h3 class="text-lg font-bold mb-2">> Back-office аренды ТС</h3>
+            <p class="opacity-80 mb-3 lang-proj3">
+              Admin-панель с данными о транспорте: локация, заряд, топливо,
+              клиентская страница с рейтингом.
+            </p>
+            <div class="flex gap-2 text-xs">
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">React</span>
+              <span class="bg-yellow-400/20 px-2 py-1 rounded">Redux</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-2xl font-bold mb-6 section-accent">
+          <span class="text-yellow-400">#</span>
+          <span class="lang-contact">КОНТАКТЫ</span>
+        </h2>
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="opacity-60">contact.sh</span>
+          </div>
+          <div class="p-6 font-mono space-y-2">
+            <p>
+              <span class="text-yellow-400">phone</span> =
+              <a href="tel:+375292600998" class="text-cyan-400 hover:underline"
+                >"+375-29-260-09-98"</a
+              >
+            </p>
+            <p>
+              <span class="text-yellow-400">email</span> =
+              <a
+                href="mailto:getbodya.0@gmail.com"
+                class="text-cyan-400 hover:underline"
+                >"getbodya.0@gmail.com"</a
+              >
+            </p>
+            <p>
+              <span class="text-yellow-400">tg</span> =
+              <a
+                href="https://t.me/threemohito"
+                target="_blank"
+                class="text-cyan-400 hover:underline"
+                >"@threemohito"</a
+              >
+            </p>
+            <p>
+              <span class="text-yellow-400">relocate</span> =
+              <span class="text-green-400">true</span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const translations = {
+        ru: {
+          whoami: "whoami",
+          role: "role",
+          title:
+            'Fullstack-разработчик <span class="opacity-60">// 5 лет опыта</span>',
+          bio: [
+            "Fullstack-разработчик с 5-летним опытом создания корпоративных приложений и сложных пользовательских интерфейсов. Стэк JavaScript (Angular/React + Node.js). Участвовал в разработке веб-приложения на Angular и React c использованием Typescript, states, Tests, SCSS, Tailwind, Bootstrap и др. Оптимизировал производительность, участвовал в миграции legacy-кода с JavaScript на TypeScript. Обеспечил a11y интерфейсов, адаптировав приложения для корректной работы со скринридерами (NVDA).",
+          ],
+          skills: "НАВЫКИ",
+          exp: "ОПЫТ РАБОТЫ",
+          proj1:
+            "WebSocket Gateway на Node.js для обмена событиями реального времени, модуль управления множественными позициями сотрудников.",
+          proj2:
+            "Сервис выставления периодических счетов на AWS: Lambda, API Gateway, DynamoDB, PDF-генерация.",
+          proj3:
+            "Admin-панель с данными о транспорте: локация, заряд, топливо, клиентская страница с рейтингом.",
+          nda: '<span class="text-yellow-400">⚠</span> Информация о заказчиках недоступна по NDA.',
+          contact: "КОНТАКТЫ",
+          name: "Богдан Цветков",
+        },
+        en: {
+          whoami: "whoami",
+          role: "role",
+          title:
+            'Fullstack Developer <span class="opacity-60">// 5 years experience</span>',
+          bio: [
+            "Fullstack developer with 5 years of experience building corporate applications and complex user interfaces. Stack: JavaScript (Angular/React + Node.js). Participated in developing web applications using Angular/React with TypeScript, states, Tests, SCSS, Tailwind, Bootstrap, etc. Optimized performance, participated in migrating legacy code from JavaScript to TypeScript. Ensured a11y of interfaces by adapting applications for proper operation with screen readers (NVDA).",
+          ],
+          skills: "SKILLS",
+          exp: "WORK EXPERIENCE",
+          proj1:
+            "WebSocket Gateway on Node.js for real-time event exchange, multi-position employee management module.",
+          proj2:
+            "Recurring billing platform on AWS: Lambda, API Gateway, DynamoDB, PDF generation.",
+          proj3:
+            "Vehicle rental admin panel: location, battery, fuel data, customer page with ratings.",
+          nda: '<span class="text-yellow-400">⚠</span> Customer information unavailable due to NDA.',
+          contact: "CONTACT",
+          name: "Bahdan Tsviatkou",
+        },
+      };
+
+      let currentLang = "ru";
+
+      function updateTexts() {
+        const t = translations[currentLang];
+        document.querySelector(".lang-whoami").textContent = t.whoami;
+        document.querySelector(".lang-role").textContent = t.role;
+        document.querySelector(".lang-title").innerHTML = t.title;
+        document.querySelector(".lang-bio").innerHTML = t.bio[0];
+        document.querySelector(".lang-skills").textContent = t.skills;
+        document.querySelector(".lang-exp").textContent = t.exp;
+        document.querySelector(".lang-proj1").textContent = t.proj1;
+        document.querySelector(".lang-proj2").textContent = t.proj2;
+        document.querySelector(".lang-proj3").textContent = t.proj3;
+        document.querySelector(".lang-nda").innerHTML = t.nda;
+        document.querySelector(".lang-contact").textContent = t.contact;
+        document.querySelector(".glitch").setAttribute("data-text", t.name);
+        document.querySelector(".glitch").textContent = t.name;
+      }
+
+      // Lang switch buttons
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelector(".lang-btn.active").classList.remove("active");
+          btn.classList.add("active");
+          currentLang = btn.dataset.lang;
+          updateTexts();
+        });
+      });
+
+      updateTexts();
+    </script>
+  </body>
+</html>
